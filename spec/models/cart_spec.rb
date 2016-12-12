@@ -1,13 +1,18 @@
 require 'rails_helper'
 
 class Cart
-  def add_item(product_id)
+  attr_reader :items
+
+  def initialize
     @items = []
+  end
+
+  def add_item(product_id)
     @items << product_id
   end
 
   def empty?
-    @items.empty?
+    items.empty?
   end
 end
 
@@ -19,12 +24,13 @@ RSpec.describe Cart, type: :model do
       cart.add_item(1)
       #expect(cart.empty?).to be false
       expect(cart).not_to be_empty
+      expect(cart.items.count).to be 1
     end
 
+    it "如果加了相同種類的商品，購買項目(CartItem)並不會增加，但數量會改變" do
 
+    end
 
-    #
-    #* 如果加了相同種類的商品，購買項目(CartItem)並不會增加，但數量會改變。
     #* 商品可以放到購物車裡，也可以再拿出來
     #* 可以計算整個購物車的總消費金額
   end
