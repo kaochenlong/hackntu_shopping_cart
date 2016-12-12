@@ -13,7 +13,7 @@ class Cart
 
     if item
       # 有的話，數量加 1
-      item.increment(1)
+      item.increment
     else
       # 沒有的話，加入 items
       @items << CartItem.new(product_id)
@@ -33,8 +33,12 @@ class CartItem
     @quantity = quantity
   end
 
-  def increment(n)
+  def increment(n = 1)
     @quantity += n
+  end
+
+  def product
+    Product.find_by(id: @product_id)
   end
 end
 
@@ -61,7 +65,15 @@ RSpec.describe Cart, type: :model do
       expect(cart.items.first.quantity).to be 3
     end
 
-    #* 商品可以放到購物車裡，也可以再拿出來
+    it "商品可以放到購物車裡，也可以再拿出來" do
+      p1 = Product.create(title:'aaa', price:100)
+
+      cart = Cart.new
+      cart.add_item(p1.id)
+      expect(cart.items.first.product_id).to be p1.id
+      expect(cart.items.first.product).to be_a Product
+    end
+
     #* 可以計算整個購物車的總消費金額
   end
 
