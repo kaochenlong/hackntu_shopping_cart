@@ -8,11 +8,33 @@ class Cart
   end
 
   def add_item(product_id)
-    @items << product_id
+    # 檢查是否有重複
+    item = items.find { |i| i.product_id == product_id }
+
+    if item
+      # 有的話，數量加 1
+      item.increment(1)
+    else
+      # 沒有的話，加入 items
+      @items << CartItem.new(product_id)
+    end
   end
 
   def empty?
     items.empty?
+  end
+end
+
+class CartItem
+  attr_reader :product_id, :quantity
+
+  def initialize(product_id, quantity = 1)
+    @product_id = product_id
+    @quantity = quantity
+  end
+
+  def increment(n)
+    @quantity += n
   end
 end
 
@@ -28,7 +50,15 @@ RSpec.describe Cart, type: :model do
     end
 
     it "如果加了相同種類的商品，購買項目(CartItem)並不會增加，但數量會改變" do
-
+      cart = Cart.new
+      3.times {
+        cart.add_item(1)
+      }
+      5.times {
+        cart.add_item(2)
+      }
+      expect(cart.items.count).to be 2
+      expect(cart.items.first.quantity).to be 3
     end
 
     #* 商品可以放到購物車裡，也可以再拿出來
