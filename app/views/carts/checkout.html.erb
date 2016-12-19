@@ -1,1 +1,8 @@
 <h2>消費金額 <%= @cart.total_price %></h2>
+
+<%= simple_form_for @order do |f| %>
+  <%= f.input :name %>
+  <%= f.input :address %>
+  <%= f.input :tel %>
+  <%= f.submit '刷卡!!', class:'btn btn-danger' %>
+<% end %>
