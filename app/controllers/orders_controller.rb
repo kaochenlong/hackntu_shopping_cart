@@ -9,12 +9,24 @@ class OrdersController < ApplicationController
 
     if order.save
       # 1. 刷卡
-      # 2. 清除購物車
-      session['my_super_cart'] = nil
-      # 3. 完成後轉往首頁
-      redirect_to products_path, notice:'感謝您!!'
+      result = Braintree::Transaction.sale(
+        :amount => @cart.total_price,
+        :payment_method_nonce => params[:payment_method_nonce],
+        :options => {
+          :submit_for_settlement => true
+        }
+      )
+
+      if result
+        # 2. 清除購物車
+        session['my_super_cart'] = nil
+        # 3. 完成後轉往首頁
+        redirect_to products_path, notice:'感謝您!!'
+      else
+        # 失敗處理
+      end
     else
-      #
+      # 失敗處理
     end
   end
 

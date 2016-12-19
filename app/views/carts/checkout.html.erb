@@ -4,5 +4,17 @@
   <%= f.input :name %>
   <%= f.input :address %>
   <%= f.input :tel %>
+  <hr />
+  <div id="payment-form"></div>
+  <hr />
   <%= f.submit '刷卡!!', class:'btn btn-danger' %>
 <% end %>
+
+<script src="https://js.braintreegateway.com/js/braintree-2.30.0.min.js"></script>
+<script>
+var clientToken = "<%= @token %>";
+
+braintree.setup(clientToken, "dropin", {
+  container: "payment-form"
+});
+</script>
